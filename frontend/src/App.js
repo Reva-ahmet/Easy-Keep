@@ -5,17 +5,17 @@ function App() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
 
-  // 1. Load the bookmarks when the page opens
+  // 1. Load the bookmarks when the page opens (Updated to Render Link)
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/bookmarks')
+    fetch('https://easy-keep.onrender.com/bookmarks')
       .then(response => response.json())
       .then(data => setBookmarks(data));
   }, []);
 
-  // 2. Function to add a new bookmark
+  // 2. Function to add a new bookmark (Updated to Render Link)
   const addBookmark = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://127.0.0.1:8000/bookmarks', {
+    const response = await fetch('https://easy-keep.onrender.com/bookmarks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, url }),
@@ -29,9 +29,9 @@ function App() {
     }
   };
 
-  // 3. Function to delete a bookmark
+  // 3. Function to delete a bookmark (Updated to Render Link)
   const deleteBookmark = async (id) => {
-    const response = await fetch(`http://127.0.0.1:8000/bookmarks/${id}`, {
+    const response = await fetch(`https://easy-keep.onrender.com/bookmarks/${id}`, {
       method: 'DELETE',
     });
 
@@ -49,7 +49,6 @@ function App() {
     list: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px', listStyle: 'none', padding: 0 },
     card: { backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' },
     link: { textDecoration: 'none', color: '#3498db', fontWeight: 'bold', fontSize: '18px', display: 'block', marginBottom: '15px' },
-    // *** Balanced Button Style ***
     deleteButton: { 
       backgroundColor: '#e74c3c', 
       color: 'white', 
