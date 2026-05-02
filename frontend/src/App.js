@@ -5,38 +5,53 @@ function App() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
 
-  // 1. Load the bookmarks when the page opens (Updated to Render Link)
+  // The actual URL from your Render dashboard
+  const API_BASE_URL = 'https://easy-keep-backend.onrender.com';
+
+  // 1. Load the bookmarks when the page opens
   useEffect(() => {
-    fetch('https://easy-keep.onrender.com/bookmarks')
-      .then(response => response.json())
-      .then(data => setBookmarks(data));
+    fetch(`${API_BASE_URL}/bookmarks`)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => setBookmarks(data))
+      .catch(error => console.error('Error fetching bookmarks:', error));
   }, []);
 
-  // 2. Function to add a new bookmark (Updated to Render Link)
+  // 2. Function to add a new bookmark
   const addBookmark = async (e) => {
     e.preventDefault();
-    const response = await fetch('https://easy-keep.onrender.com/bookmarks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, url }),
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/bookmarks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, url }),
+      });
 
-    if (response.ok) {
-      const savedBookmark = await response.json();
-      setBookmarks([...bookmarks, savedBookmark]);
-      setTitle('');
-      setUrl('');
+      if (response.ok) {
+        const savedBookmark = await response.json();
+        setBookmarks([...bookmarks, savedBookmark]);
+        setTitle('');
+        setUrl('');
+      }
+    } catch (error) {
+      console.error('Error adding bookmark:', error);
     }
   };
 
-  // 3. Function to delete a bookmark (Updated to Render Link)
+  // 3. Function to delete a bookmark
   const deleteBookmark = async (id) => {
-    const response = await fetch(`https://easy-keep.onrender.com/bookmarks/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/bookmarks/${id}`, {
+        method: 'DELETE',
+      });
 
-    if (response.ok) {
-      setBookmarks(bookmarks.filter(b => b.id !== id));
+      if (response.ok) {
+        setBookmarks(bookmarks.filter(b => b.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting bookmark:', error);
     }
   };
 
